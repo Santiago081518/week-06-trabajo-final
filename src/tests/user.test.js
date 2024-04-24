@@ -29,7 +29,7 @@ test("GET -> 'BASE_URL', should return statusCode 200 and body.length === 1", as
     expect(res.body).toHaveLength(1)
 })
 
-test("POST 'BASE_URL', should return status code 201 and res.body.firstName === user.firstName", async () => {
+test("POST -> 'BASE_URL', should return status code 201 and res.body.firstName === user.firstName", async () => {
     const user = {
         firstName: "Maicol",
         lastName: "Salazar",
@@ -47,4 +47,20 @@ test("POST 'BASE_URL', should return status code 201 and res.body.firstName === 
     expect(res.status).toBe(201)
     expect(res.body).toBeDefined()
     expect(res.body.firstName).toBe(user.firstName)
+})
+
+test("PUT -> 'BASE_URL/:id', should status code 200, res.body.firstName === bodyUpdate.firstName", async () => {
+
+    const bodyUpdate = {
+        firstName: "Nelson"
+    }
+
+    const res = await request(app)
+        .put(`${BASE_URL}/${userId}`)
+        .set('Authorization', `Bearer ${TOKEN}`)
+        .send(bodyUpdate)
+
+    expect(res.statusCode).toBe(200)
+    expect(res.body).toBeDefined()
+    expect(res.body.firstName).toBe(bodyUpdate.firstName)
 })
