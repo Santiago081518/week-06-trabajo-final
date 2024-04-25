@@ -7,7 +7,7 @@ const testMigrate = async () => {
     try {
         await sequelize.sync({ force: true })
         console.log('DB reset ✅');
-        await userCreate()
+        await userCreate() //! Agrega usuarios en la DB
         process.exit()
     } catch (error) {
         console.error(error);
