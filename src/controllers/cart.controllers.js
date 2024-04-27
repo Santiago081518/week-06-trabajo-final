@@ -5,7 +5,7 @@ const Product = require('../models/Product');
 
 const getAll = catchError(async (req, res) => {
     const userId = req.user.id;
-    const results = await Cart.findAll({ where: { userId } });
+    const results = await Cart.findAll({ where: { userId }, include: [User, Product] });
     return res.json(results);
 });
 
@@ -20,7 +20,7 @@ const getOne = catchError(async (req, res) => {
     const { id } = req.params;
     const userId = req.user.id;
 
-    const result = await Cart.findOne({ where: { id, userId } });
+    const result = await Cart.findOne({ where: { id, userId }, include: [User, Product] });
 
     if (!result) return res.sendStatus(404);
 
@@ -31,9 +31,7 @@ const remove = catchError(async (req, res) => {
     const userId = req.user.id;
     const result = await Cart.destroy({ where: { userId } });
 
-    if (!result) {
-        return res.sendStatus(404);
-    }
+    if (!result) return res.sendStatus(404);
 
     return res.sendStatus(204);
 });
