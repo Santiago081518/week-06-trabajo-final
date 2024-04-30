@@ -3,7 +3,7 @@ const sequelize = require('../utils/connection');
 
 const Cart = sequelize.define('cart', {
     quantity: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false
     },
     // userId
