@@ -3,7 +3,6 @@ require('../models')
 const request = require("supertest");
 const app = require("../app");
 const Product = require('../models/Product');
-const Cart = require('../models/Cart');
 
 const BASE_URL = '/api/v1/purchase';
 
@@ -11,8 +10,6 @@ let TOKEN;
 let userId;
 let product;
 let productBody;
-let cart;
-let cartBody;
 
 beforeAll(async () => {
     const user = {
@@ -36,21 +33,23 @@ beforeAll(async () => {
     product = await Product.create(productBody);
 
     cartBody = {
-        quantity: 2,
+        quantity: 1,
         productId: product.id
-    };
+    }
 
-    cart = await Cart.create(cartBody);
+    await request(app)
+        .post('/api/v1/cart')
+        .send(cartBody)
+        .set('Authorization', `Bearer ${TOKEN}`)
 });
 
 test("POST -> '/api/v1/purchase', should return status code 201 and purchased quantity", async () => {
     const res = await request(app)
         .post(BASE_URL)
-        .send(cart, 'userId')
         .set('Authorization', `Bearer ${TOKEN}`);
 
     expect(res.status).toBe(201);
-    expect(res.body).toBeDefined();
+    expect(res.body[0].quantity).toBe(cartBody.quantity);
 });
 
 test("GET ALL -> '/api/v1/purchase', should return statusCode 200 and body with purchases", async () => {
@@ -61,4 +60,10 @@ test("GET ALL -> '/api/v1/purchase', should return statusCode 200 and body with 
     expect(res.status).toBe(200);
     expect(res.body).toBeDefined();
     expect(res.body).toHaveLength(1);
+
+    expect(res.body[0].userId).toBeDefined();
+    expect(res.body[0].userId).toBe(userId);
+
+    expect(res.body[0].product).toBeDefined();
+    expect(res.body[0].product.id).toBe(product.id);
 });
