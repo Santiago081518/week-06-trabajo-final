@@ -20,8 +20,8 @@ beforeAll(async () => {
     }
 
     productBody = {
-        title: "yoneison@gmail.com",
-        description: "yoneison1234",
+        title: "cualquier producto",
+        description: "lorem20",
         price: 3.34,
     }
 
@@ -62,7 +62,7 @@ test("GET ALL -> 'BASE_URL', should return statusCode 200 and body.length === 1"
     expect(res.body).toHaveLength(1)
 })
 
-test("GET ONE -> 'BASE_URL', should return statusCode 200 and res.body.title === product.title", async () => {
+test("GET ONE -> 'BASE_URL', should return statusCode 200 and res.body.quantity === cart.quantity", async () => {
     const res = await request(app)
         .get(`${BASE_URL}/${cartId}`)
         .set('Authorization', `Bearer ${TOKEN}`)
